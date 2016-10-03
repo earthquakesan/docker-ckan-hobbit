@@ -1,0 +1,34 @@
+version: '2'
+
+services:
+  ckan-hobbit-db:
+    image: postgres:9.6.0
+    container_name: ckan-hobbit-db
+    environment:
+      - POSTGRES_PASSWORD=ckan
+      - POSTGRES_USER=ckan
+      - PGDATA=/var/lib/postgresql/data
+      - POSTGRES_DB=ckan
+    networks:
+      - ckan-hobbit
+  ckan-hobbit-solr:
+    image: earthquakesan/ckan-solr:2.6.0
+    container_name: ckan-hobbit-solr
+    networks:
+      - ckan-hobbit
+  hobbit-ckan:
+    image: earthquakesan/ckan:2.6.0
+    container_name: hobbit-ckan
+    depends_on:
+      - ckan-hobbit-db
+      - ckan-hobbit-solr
+    ports:
+      - "80:80"
+    environment:
+      - DATABASE_URL=postgresql://ckan:ckan@ckan-hobbit-db:5432/ckan
+      - SOLR_URL=http://ckan-hobbit-solr:8983/solr/ckan
+    networks:
+      - ckan-hobbit
+
+networks:
+  ckan-hobbit:
