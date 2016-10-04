@@ -11,11 +11,15 @@ services:
       - POSTGRES_DB=ckan
     networks:
       - ckan-hobbit
+    ports:
+      - "5432:5432"
   ckan-hobbit-solr:
     image: earthquakesan/ckan-solr:2.6.0
     container_name: ckan-hobbit-solr
     networks:
       - ckan-hobbit
+    ports:
+      - "8983:8983"
   hobbit-ckan:
     image: earthquakesan/ckan:2.6.0
     container_name: hobbit-ckan
