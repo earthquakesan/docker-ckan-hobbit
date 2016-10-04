@@ -21,7 +21,7 @@ services:
     ports:
       - "8983:8983"
   hobbit-ckan:
-    image: earthquakesan/ckan:2.6.0
+    image: earthquakesan/ckan:2.6.0-hobbit
     container_name: hobbit-ckan
     depends_on:
       - ckan-hobbit-db
@@ -31,8 +31,9 @@ services:
     environment:
       - DATABASE_URL=postgresql://ckan:ckan@ckan-hobbit-db:5432/ckan
       - SOLR_URL=http://ckan-hobbit-solr:8983/solr/ckan
-      - RECAPTCHA_PUBLIC_KEY=mypublickey
-      - RECAPTCHA_PRIVATE_KEY=myprivatekey
+      - RECAPTCHA_PUBLIC_KEY=publickey 
+      - RECAPTCHA_PRIVATE_KEY=privatekey
+      - SITE_URL=http://localhost
     networks:
       - ckan-hobbit
 
