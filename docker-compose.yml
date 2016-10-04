@@ -17,7 +17,7 @@ services:
     networks:
       - ckan-hobbit
   hobbit-ckan:
-    image: earthquakesan/ckan:2.6.0
+    image: earthquakesan/ckan:2.6.0-hobbit
     container_name: hobbit-ckan
     depends_on:
       - ckan-hobbit-db
