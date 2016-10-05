@@ -9,14 +9,10 @@ services:
       - POSTGRES_USER=ckan
       - PGDATA=/var/lib/postgresql/data
       - POSTGRES_DB=ckan
-    networks:
-      - ckan-hobbit
     restart: always
   ckan-hobbit-solr:
     image: earthquakesan/ckan-solr:2.6.0
     container_name: ckan-hobbit-solr
-    networks:
-      - ckan-hobbit
     restart: always
   hobbit-ckan:
     image: earthquakesan/ckan:2.6.0-hobbit
@@ -31,9 +27,4 @@ services:
       - RECAPTCHA_PRIVATE_KEY=privatekey
       - SITE_URL=http://localhost
       - VIRTUAL_HOST=localhost
-    networks:
-      - ckan-hobbit
     restart: always
-
-networks:
-  ckan-hobbit:
