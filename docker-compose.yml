@@ -9,15 +9,11 @@ services:
       - POSTGRES_USER=ckan
       - PGDATA=/var/lib/postgresql/data
       - POSTGRES_DB=ckan
-    networks:
-      - ckan-hobbit
     ports:
       - "5432:5432"
   ckan-hobbit-solr:
     image: earthquakesan/ckan-solr:2.6.0
     container_name: ckan-hobbit-solr
-    networks:
-      - ckan-hobbit
     ports:
       - "8983:8983"
   hobbit-ckan:
@@ -34,8 +30,3 @@ services:
       - RECAPTCHA_PUBLIC_KEY=publickey 
       - RECAPTCHA_PRIVATE_KEY=privatekey
       - SITE_URL=http://localhost
-    networks:
-      - ckan-hobbit
-
-networks:
-  ckan-hobbit:
