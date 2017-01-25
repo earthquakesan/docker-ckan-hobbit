@@ -5,14 +5,15 @@ services:
     image: postgres:9.6.0
     container_name: ckan-hobbit-db
     environment:
-      - POSTGRES_PASSWORD=ckan
-      - POSTGRES_USER=ckan
+      - POSTGRES_PASSWORD=
+      - POSTGRES_USER=
       - PGDATA=/var/lib/postgresql/data
-      - POSTGRES_DB=ckan
+      - POSTGRES_DB=
     volumes:
       - /data/docker/ckan-hobbit-db:/var/lib/postgresql/data
     restart: always
     network_mode: "bridge"
+    restart: always
   ckan-hobbit-solr:
     image: earthquakesan/ckan-solr:2.6.0
     container_name: ckan-hobbit-solr
@@ -32,10 +33,10 @@ services:
       - SITE_URL=https://ckan.project-hobbit.eu
       - VIRTUAL_HOST=ckan.project-hobbit.eu
       - LETSENCRYPT_HOST=ckan.project-hobbit.eu
-      - LETSENCRYPT_EMAIL=ermilov@informatik.uni-leipzig.de
-    restart: always
+      - LETSENCRYPT_EMAIL=
     volumes:
       - /data/docker/ckan-uploads:/var/lib/ckan
+    restart: always
     network_mode: "bridge"
     links:
       - "ckan-hobbit-solr:ckan-hobbit-solr"
