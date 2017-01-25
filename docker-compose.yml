@@ -9,33 +9,34 @@ services:
       - POSTGRES_USER=ckan
       - PGDATA=/var/lib/postgresql/data
       - POSTGRES_DB=ckan
-    networks:
-      - ckan-hobbit
-    ports:
-      - "5432:5432"
+    volumes:
+      - /data/docker/ckan-hobbit-db:/var/lib/postgresql/data
+    restart: always
+    network_mode: "bridge"
   ckan-hobbit-solr:
     image: earthquakesan/ckan-solr:2.6.0
     container_name: ckan-hobbit-solr
-    networks:
-      - ckan-hobbit
-    ports:
-      - "8983:8983"
+    restart: always
+    network_mode: "bridge"
   hobbit-ckan:
     image: earthquakesan/ckan:2.6.0-hobbit
     container_name: hobbit-ckan
     depends_on:
       - ckan-hobbit-db
       - ckan-hobbit-solr
-    ports:
-      - "80:80"
     environment:
       - DATABASE_URL=postgresql://ckan:ckan@ckan-hobbit-db:5432/ckan
       - SOLR_URL=http://ckan-hobbit-solr:8983/solr/ckan
-      - RECAPTCHA_PUBLIC_KEY=publickey 
-      - RECAPTCHA_PRIVATE_KEY=privatekey
-      - SITE_URL=http://localhost
-    networks:
-      - ckan-hobbit
-
-networks:
-  ckan-hobbit:
+      - RECAPTCHA_PUBLIC_KEY=
+      - RECAPTCHA_PRIVATE_KEY=
+      - SITE_URL=https://ckan.project-hobbit.eu
+      - VIRTUAL_HOST=ckan.project-hobbit.eu
+      - LETSENCRYPT_HOST=ckan.project-hobbit.eu
+      - LETSENCRYPT_EMAIL=ermilov@informatik.uni-leipzig.de
+    restart: always
+    volumes:
+      - /data/docker/ckan-uploads:/var/lib/ckan
+    network_mode: "bridge"
+    links:
+      - "ckan-hobbit-solr:ckan-hobbit-solr"
+      - "ckan-hobbit-db:ckan-hobbit-db"
