@@ -4,6 +4,10 @@
 To get recaptcha private/public keys visit [Google Recaptcha interface](https://www.google.com/recaptcha).
 
 # Running
+Create docker network for ckan:
+```
+docker network create ckan-net
+```
 First, start postgres, solr and nginx proxy:
 ```
 docker-compose up -d ckan-db ckan-solr nginx-proxy
