@@ -4,9 +4,9 @@
 To get recaptcha private/public keys visit [Google Recaptcha interface](https://www.google.com/recaptcha).
 
 # Running
-First, start postgres and solr:
+First, start postgres, solr and nginx proxy:
 ```
-docker-compose up -d ckan-db ckan-solr
+docker-compose up -d ckan-db ckan-solr nginx-proxy
 ```
 Check the logs of the containers to see if initialization successfully finished:
 ```
