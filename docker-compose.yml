@@ -10,7 +10,7 @@ services:
       - PGDATA=/var/lib/postgresql/data
       - POSTGRES_DB=ckan
     volumes:
-      - /tmp/ckan-hobbit-db:/var/lib/postgresql/data
+      - volume-ckan-db:/var/lib/postgresql/data
     restart: always
     networks:
       - ckan-net
@@ -19,43 +19,46 @@ services:
     image: earthquakesan/ckan-solr:2.6.0
     container_name: ckan-solr
     restart: always
+    volumes:
+      - volume-ckan-solr:/opt/solr/server/solr/mycores
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - ckan
+      - /ckan-configset
     networks:
       - ckan-net
 
-  ckan:
+  ckan-web:
     image: earthquakesan/ckan:2.6.0
     container_name: ckan-web
     restart: always
     depends_on:
       - ckan-db
       - ckan-solr
+    ports:
+      - 13337:80
     environment:
       - DATABASE_URL=postgresql://ckan:ckan@ckan-db:5432/ckan
       - SOLR_URL=http://ckan-solr:8983/solr/ckan
-      - RECAPTCHA_PUBLIC_KEY=CHANGE_ME
-      - RECAPTCHA_PRIVATE_KEY=CHANGE_ME
-      - SITE_URL=http://ckan.vhost.tld
-      - VIRTUAL_HOST=ckan.vhost.tld
-    #volumes:
-      #- /tmp/ckan-uploads:/var/lib/ckan
+      - RECAPTCHA_PUBLIC_KEY=
+      - RECAPTCHA_PRIVATE_KEY=
+      - SITE_URL=http://ckan.example.org
+    volumes:
+      - volume-ckan-web-uploads:/var/lib/ckan
     networks:
       - ckan-net
 
-  nginx-proxy:
-    image: jwilder/nginx-proxy
-    container_name: nginx-proxy
-    restart: always
-    ports:
-      - 80:80
-      - 443:443
-    networks:
-      - ckan-net
-    volumes:
-      - /tmp/docker/nginx/certs:/etc/nginx/certs:ro
-      - /tmp/docker/nginx/vhost:/etc/nginx/vhost.d
-      - /usr/share/nginx/html
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - /tmp/docker/nginx/htpasswd:/etc/nginx/htpasswd:ro
+volumes:
+  volume-ckan-db:
+    external:
+      name: volume-ckan-db
+  volume-ckan-solr:
+    external:
+      name: volume-ckan-solr
+  volume-ckan-web-uploads:
+    external:
+      name: volume-ckan-web-uploads
 
 networks:
   ckan-net:
